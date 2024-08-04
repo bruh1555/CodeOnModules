@@ -54,6 +54,7 @@ print("Starting program...")
 time.sleep(0.05)
 clear_screen()
 print("Welcome to the 2FA Console!")
+print("V0.4")
 
 def mainoption():
     print("Choose an option")
@@ -76,7 +77,7 @@ def mainoption():
             digest = config[OTP]['digest']
             digits = config[OTP]['digits']
             interval = config[OTP]['interval']
-            code = pyotp.TOTP(otpsecret, digits, interval=interval, digest=digest).now()
+            code = pyotp.TOTP(s=str(otpsecret), digits=int(digits), interval=int(interval), digest=digest).now()
             print(otpname)
             print(code)
             print("")
