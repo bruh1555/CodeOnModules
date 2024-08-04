@@ -73,7 +73,10 @@ def mainoption():
         for OTP in otptable:
             otpname = config[OTP]['name']
             otpsecret = config[OTP]['secret']
-            code = pyotp.TOTP(otpsecret).now()
+            digest = config[OTP]['digest']
+            digits = config[OTP]['digits']
+            interval = config[OTP]['interval']
+            code = pyotp.TOTP(otpsecret, digits, interval=interval, digest=digest).now()
             print(otpname)
             print(code)
             print("")
@@ -102,10 +105,43 @@ def mainoption():
             print("")
             name = input("CON 2FA: What do you want the account to be named? ")
             secret = input("CON 2FA: Whats the account secret? ")
-            config[str(name)] = {
+            digest = input("Algorithm (leave blank for default which is SHA1) [SHA1, SHA256, SHA512]: ")
+            digits = input("Digits (leave blank for default, which is 6) [6, 8]: ")
+            interval = input("Interval in seconds (leave blank for default, which is 30) [int]: ")
+            currentconfig = {
                 'name': str(name),
                 'secret': secret
             }
+            if digest == 'SHA1':
+                currentconfig.__setitem__('digest', 'SHA1')
+            elif digest == 'SHA256':
+                currentconfig.__setitem__('digest', 'SHA256')
+            elif digest == 'SHA512':
+                currentconfig.__setitem__('digest', 'SHA512')
+            elif digest == '':
+                currentconfig.__setitem__('digest', 'SHA1')
+            else:
+                print("Invalid algorithm option. Setting to default.")
+                currentconfig.__setitem__('digest', 'SHA1')
+            if digits == '6':
+                currentconfig.__setitem__('digits', int(6))
+            elif digits == '8':
+                currentconfig.__setitem__('digits', int(8))
+            elif digits == '':
+                currentconfig.__setitem__('digits', int(6))
+            else:
+                print("Invalid digits option. Setting to default.")
+                currentconfig.__setitem__('digits', int(6))
+            if interval == '':
+                currentconfig.__setitem__('interval', int(30))
+            else:
+                try:
+                    interval = int(interval)
+                    currentconfig.__setitem__('interval', interval)
+                except:
+                    print("Invalid interval option. Setting to default.")
+                    currentconfig.__setitem__('interval', int(30))
+            config[str(name)] = currentconfig
             configfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'twofactorauth.ini')
             with open(configfile, "w") as configfile:
                 config.write(configfile)
