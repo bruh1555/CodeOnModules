@@ -1,14 +1,23 @@
 from PIL import Image
 import os
 
-def raci(input_path, output_path2, new_width, new_height, new_format):
+def raci(input_path, output_path2, new_width, new_height, new_format2):
     try:
-        output_path = output_path2 + f'.{new_format}'
         with Image.open(input_path) as img:
-            resized_img = img.resize((new_width, new_height))
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
-            resized_img.save(output_path, format=new_format.upper())
-            print(f"Image saved!")
+            if new_format2.upper() == "JPG":
+                output_path = output_path2 + '.jpg'
+                new_format = "JPEG"
+                resized_img = img.resize((new_width, new_height))
+                os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                resized_img.save(output_path, format=new_format.upper())
+                print(f"Image saved!")
+            else:
+                output_path = output_path2 + f'.{new_format}'
+                new_format = new_format2
+                resized_img = img.resize((new_width, new_height))
+                os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                resized_img.save(output_path, format=new_format.upper())
+                print(f"Image saved!")
     except Exception as e:
         print("Error:", e)
 
