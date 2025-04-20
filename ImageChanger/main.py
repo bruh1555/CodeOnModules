@@ -1,8 +1,9 @@
 from PIL import Image
 import os
 
-def raci(input_path, output_path, new_width, new_height, new_format):
+def raci(input_path, output_path2, new_width, new_height, new_format):
     try:
+        output_path = output_path2 + f'.{new_format}'
         with Image.open(input_path) as img:
             resized_img = img.resize((new_width, new_height))
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -16,7 +17,7 @@ if __name__ == "__main__":
     print("v0.1.0")
     print("")
     ip = input("Enter path to input image: ")
-    op = input("Enter path to save the output image (e.g. output/image.png): ")
+    op = input("Enter path to save the output image (e.g. output/image) [Please note the extension will be automatically added. You don't need to include an extension.]: ")
     nw = int(input("Enter new width: "))
     nh = int(input("Enter new height: "))
     nf = input("Enter new image format (e.g., PNG, JPEG): ")
